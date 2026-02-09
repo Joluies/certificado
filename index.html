@@ -25,6 +25,28 @@
       aspect-ratio: 210 / 297;
     }
 
+    @media (max-width: 640px) {
+      #preview-section {
+        margin-left: -1rem;
+        margin-right: -1rem;
+      }
+
+      .preview-shadow {
+        box-shadow: none;
+      }
+
+      #certificate {
+        width: 100%;
+        max-width: none;
+        aspect-ratio: auto;
+      }
+
+      .certificate-content {
+        padding: 1.25rem;
+        font-size: 16px;
+      }
+    }
+
     @page {
       size: A4;
       margin: 0;
@@ -59,6 +81,13 @@
         aspect-ratio: auto;
         border: none;
       }
+    }
+
+    .exporting #certificate {
+      width: 210mm;
+      height: 297mm;
+      max-width: none;
+      aspect-ratio: auto;
     }
 
     .preview-shadow {
@@ -170,17 +199,6 @@
               <input class="w-full text-base outline-none" type="date" name="fechaExpedicion" id="fechaExpedicion" />
             </div>
           </label>
-
-          <label class="block">
-            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">WhatsApp de Envio</span>
-            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
-              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 4h8a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="1.5" />
-                <path d="M8 17h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-              </svg>
-              <input class="w-full text-base outline-none" type="tel" name="whatsapp" id="whatsapp" placeholder="Ej: +51 999 888 777" />
-            </div>
-          </label>
           </form>
         </div>
       </section>
@@ -192,7 +210,7 @@
           <div class="solar-hero absolute left-0 right-0 top-0 h-56 w-full"></div>
           <div class="towers-watermark absolute bottom-0 left-0 h-40 w-[75%]"></div>
 
-          <div class="relative z-10 px-6 pb-10 pt-8 text-left">
+          <div class="certificate-content relative z-10 px-6 pb-10 pt-8 text-left">
             <div class="flex justify-start">
               <img src="img/logo cle.png" alt="Lenco Electric" class="h-24 w-auto" />
             </div>
@@ -246,7 +264,7 @@
   <button id="toggle-preview" class="fixed bottom-24 right-4 rounded-full bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-lg">Ver Vista Previa</button>
 
   <button id="download" class="fixed bottom-0 left-0 right-0 z-20 w-full bg-[#1d4ed8] px-6 py-4 text-base font-semibold text-white shadow-2xl">
-    Descargar y Enviar
+    Descargar
   </button>
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -264,7 +282,6 @@
       fechaFin: document.getElementById("fechaFin"),
       ciudad: document.getElementById("ciudad"),
       fechaExpedicion: document.getElementById("fechaExpedicion"),
-      whatsapp: document.getElementById("whatsapp"),
     };
 
     const preview = {
@@ -311,42 +328,26 @@
       }
     });
 
-    const normalizePhone = (value) => value.replace(/[^0-9]/g, "");
-
     document.getElementById("download").addEventListener("click", async () => {
       const certificate = document.getElementById("certificate");
       const { jsPDF } = window.jspdf;
-      const canvas = await html2canvas(certificate, { scale: 2, useCORS: true });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgProps = pdf.getImageProperties(imgData);
-      const imgRatio = imgProps.width / imgProps.height;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      const pdfBlob = pdf.output("blob");
-      const pdfFile = new File([pdfBlob], "certificado-lenco.pdf", { type: "application/pdf" });
+      document.body.classList.add("exporting");
+      let pdf;
 
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-        try {
-          await navigator.share({
-            files: [pdfFile],
-            title: "Certificado de Trabajo",
-            text: "Certificado de trabajo en PDF de la corporación Linco Electric.",
-          });
-          return;
-        } catch (error) {
-          // Si el usuario cancela, se continua con la descarga y WhatsApp.
-        }
+      try {
+        const canvas = await html2canvas(certificate, { scale: 2, useCORS: true });
+        const imgData = canvas.toDataURL("image/png");
+        pdf = new jsPDF("p", "mm", "a4");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgProps = pdf.getImageProperties(imgData);
+        const imgRatio = imgProps.width / imgProps.height;
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save("certificado-lenco.pdf");
+      } finally {
+        document.body.classList.remove("exporting");
       }
 
-      pdf.save("certificado-lenco.pdf");
-
-      const phone = normalizePhone(fields.whatsapp.value || "");
-      if (phone) {
-        const message = encodeURIComponent("Hola, te envio el certificado en PDF de la corporación Linco Electric. Por favor adjunta el archivo descargado.");
-        window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
-      }
     });
   </script>
 </body>
