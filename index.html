@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Certificados</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #ffffff;
+    }
+
+    .certificate {
+      font-family: "Crimson Text", serif;
+      width: 100%;
+      max-width: 794px;
+      aspect-ratio: 210 / 297;
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      main {
+        padding: 0;
+      }
+
+      .preview-shadow,
+      #toggle-preview,
+      #download,
+      #certificate-form,
+      header {
+        display: none !important;
+      }
+
+      #preview-section {
+        display: block !important;
+        margin: 0 !important;
+      }
+
+      #certificate {
+        width: 210mm;
+        height: 297mm;
+        max-width: none;
+        aspect-ratio: auto;
+        border: none;
+      }
+    }
+
+    .preview-shadow {
+      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    .solar-hero {
+      background-image: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.95) 65%), url("img/solar-panel-people-768x432.jpg");
+      background-size: cover;
+      background-position: right top;
+    }
+
+    .towers-watermark {
+      background-image: url("img/torres-eléctricas-de-alta-tensión-para-transportar-energía-través-las-montañas-la-ciudad-191616643.webp");
+      background-repeat: no-repeat;
+      background-position: left bottom;
+      background-size: contain;
+      opacity: 0.2;
+      mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+      -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-900">
+  <main class="mx-auto w-full px-5 pb-28 pt-6">
+    <div class="mx-auto max-w-md">
+      <header class="space-y-2">
+        <h1 class="text-2xl font-semibold tracking-tight">Generador de Certificados</h1>
+        <p class="text-sm text-slate-600">Completa los datos y previsualiza antes de descargar.</p>
+      </header>
+
+      <section class="mt-6 space-y-4">
+        <div class="rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <form class="space-y-4" id="certificate-form">
+          <label class="block">
+            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Nombre</span>
+            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M4 20a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <input class="w-full text-base outline-none" type="text" name="nombre" id="nombre" placeholder="Nombre completo" required />
+            </div>
+          </label>
+
+          <label class="block">
+            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">DNI</span>
+            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+                <path d="M7 9h10M7 13h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <input class="w-full text-base outline-none" type="text" name="dni" id="dni" placeholder="Documento" required />
+            </div>
+          </label>
+
+          <label class="block">
+            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Cargo</span>
+            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 20h16" stroke="currentColor" stroke-width="1.5" />
+                <path d="M8 20v-9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v9" stroke="currentColor" stroke-width="1.5" />
+                <path d="M9 9V6a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <input class="w-full text-base outline-none" type="text" name="cargo" id="cargo" placeholder="Ej: Supervisor" required />
+            </div>
+          </label>
+
+          <label class="block">
+            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Fecha Inicio</span>
+            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" />
+                <path d="M7 3v4M17 3v4M3 9h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <input class="w-full text-base outline-none" type="date" name="fechaInicio" id="fechaInicio" required />
+            </div>
+          </label>
+
+          <label class="block">
+            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Fecha Fin</span>
+            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" />
+                <path d="M7 3v4M17 3v4M3 9h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <input class="w-full text-base outline-none" type="date" name="fechaFin" id="fechaFin" required />
+            </div>
+          </label>
+
+          <label class="block">
+            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Ciudad</span>
+            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" stroke="currentColor" stroke-width="1.5" />
+                <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <input class="w-full text-base outline-none" type="text" name="ciudad" id="ciudad" placeholder="Ciudad" required />
+            </div>
+          </label>
+
+          <label class="block">
+            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Fecha de Expedicion</span>
+            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" />
+                <path d="M7 3v4M17 3v4M3 9h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <input class="w-full text-base outline-none" type="date" name="fechaExpedicion" id="fechaExpedicion" />
+            </div>
+          </label>
+
+          <label class="block">
+            <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">WhatsApp de Envio</span>
+            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 4h8a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M8 17h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <input class="w-full text-base outline-none" type="tel" name="whatsapp" id="whatsapp" placeholder="Ej: +51 999 888 777" />
+            </div>
+          </label>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <section class="mt-6 hidden" id="preview-section">
+      <div class="rounded-3xl border border-slate-200 bg-white p-4 preview-shadow">
+        <div class="certificate relative mx-auto overflow-hidden rounded-none border border-slate-100 bg-white" id="certificate">
+          <div class="solar-hero absolute left-0 right-0 top-0 h-56 w-full"></div>
+          <div class="towers-watermark absolute bottom-0 left-0 h-40 w-[75%]"></div>
+
+          <div class="relative z-10 px-6 pb-10 pt-8 text-left">
+            <div class="flex justify-start">
+              <img src="img/logo cle.png" alt="Lenco Electric" class="h-24 w-auto" />
+            </div>
+
+            <div class="mt-6 space-y-2">
+              <p class="text-sm uppercase tracking-[0.3em] text-slate-500">Certificado de Trabajo</p>
+              <p class="text-sm font-semibold uppercase text-slate-700">A quien corresponda:</p>
+            </div>
+
+            <div class="mt-6 space-y-5 text-left text-[15px] leading-relaxed text-slate-700">
+              <p>
+                Por intermedio de la presente, la empresa CORPORACION LINCO ELECTRIC E.I.R.L., legalmente constituida e identificada con
+                <span class="font-semibold">RUC: 20604654671</span>, certifica que el/la Sr./Sra.
+                <span class="font-semibold" id="preview-nombre">Nombre completo</span>, identificado(a) con DNI N°
+                <span class="font-semibold" id="preview-dni">00000000</span>, presto sus servicios en nuestra institucion
+                desempenando el cargo de:
+              </p>
+              <p class="text-base font-semibold text-slate-900" id="preview-cargo">Cargo</p>
+              <p>
+                Durante el periodo comprendido desde el <span class="font-semibold" id="preview-inicio">Fecha inicio</span>
+                hasta el <span class="font-semibold" id="preview-fin">Fecha fin</span> (o la fecha actual)
+              </p>
+              <p>
+                Durante su permanencia, el/la Sr./Sra. <span class="font-semibold" id="preview-apellido">Apellido</span>
+                demostro ser una persona responsable, eficiente y con altos estandares de seguridad en el manejo de
+                sistemas electricos, fotovoltaicos y montajes de infraestructura, cumpliendo satisfactoriamente con las funciones
+                asignadas y las normativas tecnicas vigentes.
+              </p>
+              <p>
+                Se expide la presente certificacion a solicitud del interesado para los fines que considere convenientes,
+                en la ciudad de <span class="font-semibold" id="preview-ciudad">Iquitos</span>, a los
+                <span class="font-semibold" id="preview-emision">09/02/2018</span>.
+              </p>
+            </div>
+
+            <div class="mt-10 text-right text-sm text-slate-600">
+              <div class="ml-auto w-60 text-right">
+                <img src="img/firma.png" alt="Firma" class="-mt-6 ml-auto h-24 w-auto" />
+                  <p class="font-semibold">Linco Guevara Medina</p>
+                  <p>Ceo &amp; Fundador</p>
+                  <p>Corporacion Linco Electric</p>
+                  <p>931109642</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <button id="toggle-preview" class="fixed bottom-24 right-4 rounded-full bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-lg">Ver Vista Previa</button>
+
+  <button id="download" class="fixed bottom-0 left-0 right-0 z-20 w-full bg-[#1d4ed8] px-6 py-4 text-base font-semibold text-white shadow-2xl">
+    Descargar y Enviar
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script>
+    const form = document.getElementById("certificate-form");
+    const previewSection = document.getElementById("preview-section");
+    const toggleButton = document.getElementById("toggle-preview");
+
+    const fields = {
+      nombre: document.getElementById("nombre"),
+      dni: document.getElementById("dni"),
+      cargo: document.getElementById("cargo"),
+      fechaInicio: document.getElementById("fechaInicio"),
+      fechaFin: document.getElementById("fechaFin"),
+      ciudad: document.getElementById("ciudad"),
+      fechaExpedicion: document.getElementById("fechaExpedicion"),
+      whatsapp: document.getElementById("whatsapp"),
+    };
+
+    const preview = {
+      nombre: document.getElementById("preview-nombre"),
+      dni: document.getElementById("preview-dni"),
+      cargo: document.getElementById("preview-cargo"),
+      inicio: document.getElementById("preview-inicio"),
+      fin: document.getElementById("preview-fin"),
+      apellido: document.getElementById("preview-apellido"),
+      ciudad: document.getElementById("preview-ciudad"),
+      emision: document.getElementById("preview-emision"),
+    };
+
+    const formatDate = (value) => {
+      if (!value) return "";
+      const [year, month, day] = value.split("-");
+      return `${day}/${month}/${year}`;
+    };
+
+    const updatePreview = () => {
+      const nombre = fields.nombre.value.trim();
+      const nombreParts = nombre ? nombre.split(/\s+/) : [];
+      const apellido = nombreParts.length ? nombreParts[nombreParts.length - 1] : "Apellido";
+      preview.nombre.textContent = nombre || "Nombre completo";
+      preview.dni.textContent = fields.dni.value || "00000000";
+      preview.cargo.textContent = fields.cargo.value || "Cargo";
+      preview.inicio.textContent = formatDate(fields.fechaInicio.value) || "Fecha inicio";
+      preview.fin.textContent = formatDate(fields.fechaFin.value) || "Fecha fin";
+      preview.apellido.textContent = apellido;
+      preview.ciudad.textContent = fields.ciudad.value || "Ciudad";
+      const fechaEmision = formatDate(fields.fechaExpedicion.value) || "Fecha expedicion";
+      preview.emision.textContent = fechaEmision;
+    };
+
+    form.addEventListener("input", updatePreview);
+    updatePreview();
+
+    toggleButton.addEventListener("click", () => {
+      previewSection.classList.toggle("hidden");
+      const isVisible = !previewSection.classList.contains("hidden");
+      toggleButton.textContent = isVisible ? "Ocultar Vista Previa" : "Ver Vista Previa";
+      if (isVisible) {
+        previewSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    const normalizePhone = (value) => value.replace(/[^0-9]/g, "");
+
+    document.getElementById("download").addEventListener("click", async () => {
+      const certificate = document.getElementById("certificate");
+      const { jsPDF } = window.jspdf;
+      const canvas = await html2canvas(certificate, { scale: 2, useCORS: true });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgRatio = imgProps.width / imgProps.height;
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const pdfBlob = pdf.output("blob");
+      const pdfFile = new File([pdfBlob], "certificado-lenco.pdf", { type: "application/pdf" });
+
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+        try {
+          await navigator.share({
+            files: [pdfFile],
+            title: "Certificado de Trabajo",
+            text: "Certificado de trabajo en PDF de la corporación Linco Electric.",
+          });
+          return;
+        } catch (error) {
+          // Si el usuario cancela, se continua con la descarga y WhatsApp.
+        }
+      }
+
+      pdf.save("certificado-lenco.pdf");
+
+      const phone = normalizePhone(fields.whatsapp.value || "");
+      if (phone) {
+        const message = encodeURIComponent("Hola, te envio el certificado en PDF de la corporación Linco Electric. Por favor adjunta el archivo descargado.");
+        window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+      }
+    });
+  </script>
+</body>
+</html>
